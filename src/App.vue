@@ -1,4 +1,4 @@
-;<script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue';
 import KatexContainer from './components/KatexContainer.vue';
 import Dialog from './components/Dialog.vue';
@@ -49,7 +49,7 @@ function screenshot() {
             return;
           }
           const item = new ClipboardItem({ "image/png": blob });
-          navigator.clipboard.write([item]); 
+          navigator.clipboard.write([item]);
         });
       })
       .catch(() => {
@@ -61,19 +61,25 @@ function screenshot() {
 </script>
 
 <template>
-  <ActionBar>
-    <ActionBarEntry @click="open = true">Settings</ActionBarEntry>
-    <ActionBarEntry @click="upScale()">Scale +</ActionBarEntry>
-    <ActionBarEntry @click="downScale()">Scale -</ActionBarEntry>
-    <ActionBarEntry @click="moreRows()">Rows +</ActionBarEntry>
-    <ActionBarEntry @click="lessRows()">Rows -</ActionBarEntry>
-    <ActionBarEntry @click="screenshot()">Screenshot</ActionBarEntry>
-    <ActionBarEntry @click="aboutOpen = true">About</ActionBarEntry>
-  </ActionBar>
-  <KatexInput v-model="texString" :rowCount="settings.textareaRows" />
-  <hr draggable="true"/>
-  <div class="output-container">
-    <KatexContainer ref="katexContainer" :texString="texString" :scaling="settings.scale"></KatexContainer>
+  <div class="main-content">
+    <div style="grid-row: menu-bar;">
+      <ActionBar>
+        <ActionBarEntry @click="open = true">Settings</ActionBarEntry>
+        <ActionBarEntry @click="upScale()">Scale +</ActionBarEntry>
+        <ActionBarEntry @click="downScale()">Scale -</ActionBarEntry>
+        <ActionBarEntry @click="moreRows()">Rows +</ActionBarEntry>
+        <ActionBarEntry @click="lessRows()">Rows -</ActionBarEntry>
+        <ActionBarEntry @click="screenshot()">Screenshot</ActionBarEntry>
+        <ActionBarEntry @click="aboutOpen = true">About</ActionBarEntry>
+      </ActionBar>
+    </div>
+    <div style="grid-row: input-area">
+      <KatexInput v-model="texString" :rowCount="settings.textareaRows" />
+      <hr draggable="false" />
+    </div>
+    <div class="output-container" style="grid-row: output-area">
+      <KatexContainer ref="katexContainer" :texString="texString" :scaling="settings.scale"></KatexContainer>
+    </div>
   </div>
   <Dialog :show="open" title="Settings" @close="open = false">
     <Settings />
@@ -84,8 +90,18 @@ function screenshot() {
 </template>
 
 <style scoped>
-  .output-container {
-    padding: 10px;
-    width: min-content;
-  }
+.output-container {
+  padding: 10px;
+  width: calc(100% - 20px);
+  height: calc(100% - 20px);
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.main-content {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: [menu-bar] auto [input-area] auto [output-area] 1fr;
+}
 </style>
