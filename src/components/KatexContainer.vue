@@ -44,12 +44,16 @@
 </script>
 
 <template>
-    <div ref="container" :style="{'--quicktex-font-size': props.scaling.toString() + 'em'}"></div>
+    <div class="qtex-final-container" ref="container" :style="{'--quicktex-font-size': props.scaling.toString() + 'em'}"></div>
 </template>
 
 <style>
     @import "../../node_modules/katex/dist/katex.min.css";
     .katex {
         font-size: var(--quicktex-font-size, 1em); 
+    }
+
+    .qtex-final-container {
+        width: max-content;
     }
 </style>
