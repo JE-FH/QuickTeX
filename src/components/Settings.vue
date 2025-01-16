@@ -56,6 +56,8 @@ settings.$subscribe(() => {
                 <input name="textareaRows" v-model="textareaRowsInput" @input="setTextareaRows()" />
                 <br/>
                 <br/>
+                <hr/>
+                <p>Multiline mode splits the input after every two new lines and parses them as seperate input to katex and stacks them on top of each other.</p>
                 <label for="useMultiline">Enable multiline mode:</label>
                 <input name="useMultiline" type="checkbox" v-model="useMultilineValue">
                 <br/>
