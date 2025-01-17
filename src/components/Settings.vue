@@ -1,13 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useSettings } from '../store/Settings';
 import KatexContainer from './KatexContainer.vue';
+import { MultilineAlignment } from './ExtendedKatexContainer.vue';
 
 const settings = useSettings();
 
 const scaleInput = ref<string>(settings.scale.toString());
 const textareaRowsInput = ref<string>(settings.textareaRows.toString());
 
+const useMultilineValue = computed<boolean>({
+    get: () => settings.useMultiline,
+    set: (v) => {
+        settings.setUseMultiline(v)
+    }
+});
+const multilineAlignmentValue = computed<MultilineAlignment>({
+    get: () => settings.multilineAlignment,
+    set: (v) => {
+        settings.setMultilineAlignment(v)
+    }
+})
 
 function setScale() {
     let number = Number(scaleInput.value);
@@ -41,6 +54,19 @@ settings.$subscribe(() => {
                 <br/>
                 <label for="textareaRows">Textarea row count: </label>
                 <input name="textareaRows" v-model="textareaRowsInput" @input="setTextareaRows()" />
+                <br/>
+                <br/>
+                <hr/>
+                <p>Multiline mode splits the input after every two new lines and parses them as seperate input to katex and stacks them on top of each other.</p>
+                <label for="useMultiline">Enable multiline mode:</label>
+                <input name="useMultiline" type="checkbox" v-model="useMultilineValue">
+                <br/>
+                <br/>
+                <label for="multilineAlignment">Multiline alignment: </label>
+                <select name="multilineAlignment" v-model="multilineAlignmentValue">
+                    <option :value="MultilineAlignment.LeftAlign">Left align</option>
+                    <option :value="MultilineAlignment.CenterAlign">Center align</option>
+                </select>
             </fieldset>
         </div>
         <div class="preview-container">

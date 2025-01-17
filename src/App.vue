@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import KatexContainer from './components/KatexContainer.vue';
 import Dialog from './components/Dialog.vue';
 import Settings from './components/Settings.vue';
 import KatexInput from './components/KatexInput.vue';
@@ -8,13 +7,16 @@ import ActionBar from './components/ActionBar.vue';
 import ActionBarEntry from './components/ActionBarEntry.vue';
 import { useSettings } from './store/Settings';
 import About from './components/About.vue';
+import ExtendedKatexContainer from './components/ExtendedKatexContainer.vue';
+import { writeImage } from '@tauri-apps/plugin-clipboard-manager';
+import { Image } from '@tauri-apps/api/image';
 
 const texString = ref<string>("\\KaTeX");
 
 const open = ref<boolean>(false);
 const aboutOpen = ref<boolean>(false);
 const settings = useSettings();
-const katexContainer = ref<InstanceType<typeof KatexContainer> | null>(null);
+const katexContainer = ref<InstanceType<typeof ExtendedKatexContainer> | null>(null);
 function upScale() {
   settings.setScale(settings.scale + 0.5);
 }
@@ -48,9 +50,13 @@ function screenshot() {
             //ignore for now
             return;
           }
-          const item = new ClipboardItem({ "image/png": blob });
-          navigator.clipboard.write([item]);
-        });
+          blob.arrayBuffer().then((arrayBuffer) => {
+            return Image.fromBytes(arrayBuffer);
+          }).then((image) => {
+            writeImage(image)
+          });
+        })
+        
       })
       .catch(() => {
         //Ignore for now
@@ -78,7 +84,13 @@ function screenshot() {
       <hr draggable="false" />
     </div>
     <div class="output-container" style="grid-row: output-area">
-      <KatexContainer ref="katexContainer" :texString="texString" :scaling="settings.scale"></KatexContainer>
+      <ExtendedKatexContainer
+        ref="katexContainer"
+        :texString="texString"
+        :scaling="settings.scale"
+        :enableMultiline="settings.useMultiline"
+        :multiline-alignment="settings.multilineAlignment"
+      />
     </div>
   </div>
   <Dialog :show="open" title="Settings" @close="open = false">
