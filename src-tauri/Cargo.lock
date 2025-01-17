@@ -2893,7 +2893,7 @@ dependencies = [
 
 [[package]]
 name = "quicktex"
-version = "0.2.0-test"
+version = "0.3.0-1"
 dependencies = [
  "serde",
  "serde_json",
