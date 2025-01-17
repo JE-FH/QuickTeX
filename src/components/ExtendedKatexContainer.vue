@@ -55,7 +55,7 @@
     })
 
     const style = computed<any>(() => {
-        return `padding-bottom:${4 * props.scaling + 4}px;width: min-content;display:flex;flex-direction:column;align-items:${alignStyle.value}`;
+        return `padding-bottom:${4 * props.scaling + 4}px;gap:${4 * props.scaling + 4}px;width: min-content;display:flex;flex-direction:column;align-items:${alignStyle.value}`;
     })
 </script>
 
